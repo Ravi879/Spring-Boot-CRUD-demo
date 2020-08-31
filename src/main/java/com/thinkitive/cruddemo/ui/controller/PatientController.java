@@ -17,7 +17,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/patients")
+@RequestMapping("/patients")
 @Validated
 @Slf4j
 public class PatientController {
