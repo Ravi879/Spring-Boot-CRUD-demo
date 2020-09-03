@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--monitorInterval: The minimum amount of time, in seconds, after that it will check for any changes in configuration -->
+<!--status: Internal logging level which prints log event for log4j2 on console-->
 <Configuration status="WARN" monitorInterval="30">
     <Properties>
         <Property name="LOG_PATTERN">
@@ -44,7 +46,7 @@
     <Loggers>
         <Logger name="com.thinkitive.cruddemo" level="info" additivity="false">
             <!--<AppenderRef ref="AsyncAppender"/>-->
-            <AppenderRef ref="DBAppender"/>
+            <!--<AppenderRef ref="DBAppender"/>-->
         </Logger>
 
         <Root level="info">
