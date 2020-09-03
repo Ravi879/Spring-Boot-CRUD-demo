@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--monitorInterval: The minimum amount of time, in seconds, after that it will check for any changes in configuration -->
+<!--status: Internal logging level which prints log event for log4j2 on console-->
 <Configuration status="WARN" monitorInterval="30">
     <Properties>
         <Property name="LOG_PATTERN">
@@ -7,9 +9,12 @@
 
     </Properties>
     <Appenders>
+        <!--Console appender-->
         <Console name="ConsoleAppender" target="SYSTEM_OUT" follow="true">
             <PatternLayout pattern="${LOG_PATTERN}"/>
         </Console>
+
+        <!--File appender-->
         <RollingFile name="FileAppender" fileName="logs/app-logs.log"
                      filePattern="logs/app-logs-%d{yyyy-MM-dd}-%i.log">
             <PatternLayout>
@@ -20,15 +25,32 @@
             </Policies>
             <DefaultRolloverStrategy max="10"/>
         </RollingFile>
+
+        <!--Async appender-->
+        <Async name="AsyncAppender" bufferSize="5">
+            <AppenderRef ref="FileAppender"/>
+        </Async>
+
+        <!--JDBC appender-->
+        <JDBC name="DBAppender" tableName="LOGS">
+            <ConnectionFactory class="com.thinkitive.cruddemo.config.ConnectionFactory" method="getDatabaseConnection"/>
+            <Column name="event_id" literal="nextval('logs_event_id_seq')" isUnicode="false"/>
+            <Column name="event_date" isEventTimestamp="true"/>
+            <Column name="level" pattern="%level" isUnicode="false"/>
+            <Column name="logger" pattern="%logger" isUnicode="false"/>
+            <Column name="message" pattern="%message" isUnicode="false"/>
+            <Column name="throwable" pattern="%ex{full}" isUnicode="false"/>
+        </JDBC>
     </Appenders>
+
     <Loggers>
         <Logger name="com.thinkitive.cruddemo" level="info" additivity="false">
-            <AppenderRef ref="FileAppender"/>
+            <!--<AppenderRef ref="AsyncAppender"/>-->
+            <!--<AppenderRef ref="DBAppender"/>-->
         </Logger>
 
-        <Root level="error">
+        <Root level="info">
             <AppenderRef ref="ConsoleAppender"/>
-            <AppenderRef ref="FileAppender"/>
         </Root>
     </Loggers>
 </Configuration>
