@@ -6,13 +6,18 @@ import java.util.List;
 
 public interface PatientService {
 
+    PatientDto getPatientByPatientId(String patientId);
+
     List<PatientDto> getAllPatients();
+
+    List<PatientDto> getPatientsByAge(Integer age);
+
+    List<PatientDto> getPatientsByAgeAndDisease(Integer age, String disease);
 
     PatientDto newPatient(PatientDto patientDto);
 
     PatientDto updateItem(PatientDto patientDto);
 
     void deleteItem(String patientId);
-
 
 }

@@ -27,8 +27,30 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
+    public PatientDto getPatientByPatientId(String patientId) {
+        PatientEntity patientEntity = patientRepo.findByPatientId(patientId).orElseThrow(getInvalidIdException(patientId));
+        return mapper.map(patientEntity, PatientDto.class);
+    }
+
+    @Override
     public List<PatientDto> getAllPatients() {
         List<PatientEntity> patientEntities = patientRepo.findAll();
+        Type type = new TypeToken<List<PatientDto>>() {
+        }.getType();
+        return mapper.map(patientEntities, type);
+    }
+
+    @Override
+    public List<PatientDto> getPatientsByAge(Integer age) {
+        List<PatientEntity> patientEntities = patientRepo.findAllByAge(age);
+        Type type = new TypeToken<List<PatientDto>>() {
+        }.getType();
+        return mapper.map(patientEntities, type);
+    }
+
+    @Override
+    public List<PatientDto> getPatientsByAgeAndDisease(Integer age, String disease) {
+        List<PatientEntity> patientEntities = patientRepo.findAllByAgeAndDisease(age, disease);
         Type type = new TypeToken<List<PatientDto>>() {
         }.getType();
         return mapper.map(patientEntities, type);
