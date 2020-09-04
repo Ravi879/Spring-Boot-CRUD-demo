@@ -1,5 +1,7 @@
 package com.thinkitive.cruddemo.ui.resopnse;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDate;
 
 public class PatientResponse {
@@ -9,6 +11,7 @@ public class PatientResponse {
     private String name;
     private String disease;
     private Integer age;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
 
 
