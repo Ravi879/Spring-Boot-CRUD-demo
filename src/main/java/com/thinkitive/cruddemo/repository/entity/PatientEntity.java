@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-@Entity
+@Entity(name = "Patient")
 @Table(name = "PATIENT")
 public class PatientEntity implements Serializable {
 
