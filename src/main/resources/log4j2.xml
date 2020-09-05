@@ -47,6 +47,7 @@
         <Logger name="com.thinkitive.cruddemo" level="info" additivity="false">
             <!--<AppenderRef ref="AsyncAppender"/>-->
             <!--<AppenderRef ref="DBAppender"/>-->
+            <AppenderRef ref="ConsoleAppender"/>
         </Logger>
 
         <Root level="info">

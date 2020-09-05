@@ -1,14 +1,17 @@
 package com.thinkitive.cruddemo.exception.handler;
 
+import com.thinkitive.cruddemo.exception.InvalidTokenException;
 import com.thinkitive.cruddemo.exception.ResourceAlreadyExistsException;
 import com.thinkitive.cruddemo.exception.ResourceNotFoundException;
 import com.thinkitive.cruddemo.exception.model.ErrorListMessages;
 import com.thinkitive.cruddemo.exception.model.ErrorMessage;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,7 +20,6 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,6 +58,29 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
 
         return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<ErrorMessage> handleInvalidTokenException(InvalidTokenException ex, HttpServletRequest request) {
+        log.error("InvalidTokenException -- {} -- {}", ex.getMessageCode(), ex.getErrorInfo());
+
+        ErrorMessage errorMessage = new ErrorMessage(
+                getMessage(messageSource, ex.getMessageCode()), INVALID_TOKEN,
+                HttpStatus.CONFLICT.value(), request.getRequestURI());
+
+        return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @ExceptionHandler(value = BadCredentialsException.class)
+    public ResponseEntity<ErrorMessage> handleBadCredentialsException(BadCredentialsException ex, HttpServletRequest request) {
+        log.error("BadCredentialsException -- bad.credentials -- {}", ExceptionUtils.getRootCauseMessage(ex));
+
+        ErrorMessage errorMessage = new ErrorMessage(
+                getMessage(messageSource, "bad.credentials"), BAD_CREDENTIALS,
+                HttpStatus.UNAUTHORIZED.value(), request.getRequestURI());
+
+        return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.UNAUTHORIZED);
+    }
+
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
